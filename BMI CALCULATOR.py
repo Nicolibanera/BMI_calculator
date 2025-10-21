@@ -163,7 +163,7 @@ slider = ttk.Scale(root, from_=0, to=220, orient='horizontal', style="TScale",
 slider.place(x=80, y=250)
 
 # Slider2
-current_value2 = tk.DoubleVar()
+current_value2 = tk.DoubleVar()#i will changtr
 
 def get_current_value2():
     return '{: .2f}'.format(current_value2.get())
