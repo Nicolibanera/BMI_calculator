@@ -127,26 +127,29 @@ try:
 except:
     pass
 
-
 def resetButton():
     Height.set("")
     Weight.set("")
     label1.config(text="")
     label2.config(text="")
     label3.config(text="")
-    icon_label.config(image= '')
+    icon_label.config(image='')
 
     current_value.set(0)
     current_value2.set(0)
 
+    # to restore placeholder text
+    add_placeholder(height, Height, "Enter Height (cm)")
+    add_placeholder(weight, Weight, "Enter Weight (kg)")
+
     img = Image.open("icons/man.png")
-    resized_image = img.resize((50,100))
+    resized_image = img.resize((50, 100))
     photo2 = ImageTk.PhotoImage(resized_image)
     secondimage.config(image=photo2)
     secondimage.image = photo2
 
 
-####################Slider1###################
+#Slider1#
 current_value = tk.DoubleVar()
 
 def get_current_value():
@@ -188,7 +191,7 @@ def slider_changed2(event):
     size = int(float(get_current_value2()))
     img = (Image.open("icons/man.png"))
 
-    current_height = int(float(Height.get() or 100)) #if Height.get() else 100
+    current_height = int(float(Height.get())) if Height.get() else 100
 
     new_width = 50 + (size // 2)
     new_height = current_height + 10
@@ -206,16 +209,81 @@ slider2 = ttk.Scale(root, from_=0, to=200, orient='horizontal', style="TScale",
                    command=slider_changed2, variable=current_value2)
 slider2.place(x=300, y=250)
 
-# Entry box
+
+
+
+# Entry box linked with slider
 Height = StringVar()
 Weight = StringVar()
-height = Entry(root, textvariable=Height, width=5, font='arial 50', bg="#fff", fg="#000", bd=0, justify=CENTER)
-height.place(x=35, y=160)
-Height.set(get_current_value())
+Height.set("")
+Weight.set("")
 
-weight = Entry(root, textvariable=Weight, width=5, font='arial 50', bg="#fff", fg="#000", bd=0, justify=CENTER)
+def entryHeight(*args):
+    txt = Height.get()
+    if txt.strip() == "" or  txt == "Enter Height (cm)":
+        return
+    try:
+        val = float(txt)
+        if 0 <= val <= 220:
+            current_value.set(val)
+    except ValueError:
+        pass
+
+
+
+
+def entryWeight(*args):
+    txt = Weight.get()
+    if txt.strip() == "" or txt == "Enter Weight (kg)":
+        return
+    try:
+        val = float(txt)
+        if 0 <= val <= 200:
+            current_value2.set(val)
+    except ValueError:
+        pass
+
+
+
+Height.trace_add("write", entryHeight)
+Weight.trace_add("write", entryWeight)
+
+
+# Placeholder
+def add_placeholder(entry: Entry, var: tk.StringVar, text: str):
+    if not var.get():
+        entry.insert(0, text)
+        entry.config(fg="#000")
+
+    def on_focus_in(event):
+        if entry.get() == text:
+            entry.delete(0, "end")
+            entry.config(fg="black")
+
+    def on_focus_out(event):   
+        if entry.get().strip() == "":
+            entry.insert(0, text)
+            entry.config(fg="#000")
+
+    entry.bind("<FocusIn>", on_focus_in)
+    entry.bind("<FocusOut>", on_focus_out)
+
+
+height = Entry(root, textvariable=Height, width=15, font='arial 15', bg="#fff", fg="#000", bd=0, justify=LEFT)
+height.place(x=35, y=160)
+# Height.set(get_current_value())
+
+weight = Entry(root, textvariable=Weight, width=15, font='arial 15', bg="#fff", fg="#000", bd=0, justify=LEFT)
 weight.place(x=255, y=160)
-Weight.set(get_current_value2())
+# Weight.set(get_current_value2())
+
+
+# Add placeholders
+add_placeholder(height, Height, "Enter Height (cm)")
+add_placeholder(weight, Weight, "Enter Weight (kg)")
+
+
+
 
 # man image
 secondimage = Label(root, bg=COLORS["card"])
@@ -230,14 +298,6 @@ Button(root, text="View Report", width=15, height=2, font="arial 10 bold",
 #  reset button
 Button(root, text="Reset", width=15, height=2, font="arial 10 bold", 
        bg=COLORS["accent"], fg="white", command=resetButton).place(x=80, y=340)
-
-
-
-
-
-
-
-
 
 
 # BMI result section with icon
