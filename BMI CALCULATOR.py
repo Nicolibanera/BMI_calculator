@@ -128,18 +128,22 @@ except:
     pass
 
 
+def resetButton():
+    Height.set("")
+    Weight.set("")
+    label1.config(text="")
+    label2.config(text="")
+    label3.config(text="")
+    icon_label.config(image= '')
 
-#  reset button
-Button(
-    root,
-    text="Reset",
-    width=15,
-    height=2,
-    font="arial 10 bold",
-    bg="#1f6e68",
-    fg="white",
-    command= '',
-).place(x=80, y=340)
+    current_value.set(0)
+    current_value2.set(0)
+
+    img = Image.open("icons/man.png")
+    resized_image = img.resize((50,100))
+    photo2 = ImageTk.PhotoImage(resized_image)
+    secondimage.config(image=photo2)
+    secondimage.image = photo2
 
 
 ####################Slider1###################
@@ -154,7 +158,7 @@ def slider_changed(event):
     size = int(float(get_current_value()))
     img = (Image.open("icons/man.png"))
 
-    current_weight = int(float(Weight.get()))
+    current_weight = int(float(Weight.get() or 0))
 
     new_height = 10 + size
     new_width = (current_weight // 2) + 50
@@ -173,7 +177,7 @@ slider = ttk.Scale(root, from_=0, to=220, orient='horizontal', style="TScale",
 slider.place(x=80, y=250)
 
 # Slider2
-current_value2 = tk.DoubleVar()#i will changtr
+current_value2 = tk.DoubleVar()#i will change the int to float
 
 def get_current_value2():
     return '{: .2f}'.format(current_value2.get())
@@ -184,7 +188,7 @@ def slider_changed2(event):
     size = int(float(get_current_value2()))
     img = (Image.open("icons/man.png"))
 
-    current_height = int(float(Height.get())) if Height.get() else 100
+    current_height = int(float(Height.get() or 100)) #if Height.get() else 100
 
     new_width = 50 + (size // 2)
     new_height = current_height + 10
@@ -220,6 +224,16 @@ secondimage.place(x=70, y=350)
 # View Report button
 Button(root, text="View Report", width=15, height=2, font="arial 10 bold", 
        bg=COLORS["accent"], fg="white", command=BMI).place(x=280, y=340)
+
+
+
+#  reset button
+Button(root, text="Reset", width=15, height=2, font="arial 10 bold", 
+       bg=COLORS["accent"], fg="white", command=resetButton).place(x=80, y=340)
+
+
+
+
 
 
 
