@@ -128,8 +128,18 @@ except:
     pass
 
 
-def resetButton():
-    print('hello')
+
+#  reset button
+Button(
+    root,
+    text="Reset",
+    width=15,
+    height=2,
+    font="arial 10 bold",
+    bg="#1f6e68",
+    fg="white",
+    command= '',
+).place(x=80, y=340)
 
 
 ####################Slider1###################
