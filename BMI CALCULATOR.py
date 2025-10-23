@@ -245,7 +245,7 @@ Weight.set("")
 
 def entryHeight(*args):
     txt = Height.get()
-    if txt.strip() == "" or  txt == "Enter Height (cm)":
+    if txt.strip() == "" or  txt == "Enter Height":
         return
     try:
         val = float(txt)
@@ -260,7 +260,7 @@ def entryHeight(*args):
 
 def entryWeight(*args):
     txt = Weight.get()
-    if txt.strip() == "" or txt == "Enter Weight (kg)":
+    if txt.strip() == "" or txt == "Enter Weight":
         return
     try:
         val = float(txt)
@@ -277,31 +277,40 @@ Height.trace_add("write", entryHeight)
 Weight.trace_add("write", entryWeight)
 
 
-# Placeholder
+
+# Placeholder.
 def add_placeholder(entry: Entry, var: tk.StringVar, text: str):
-    if not var.get():
+    normal_font = ("Arial", 25)
+    placeholder_font = ("Arial", 10, "italic")
+
+    def show_placeholder():
+        entry.delete(0, "end")
         entry.insert(0, text)
-        entry.config(fg="#000")
+        entry.config(fg="#666", font=placeholder_font)
 
     def on_focus_in(event):
         if entry.get() == text:
             entry.delete(0, "end")
-            entry.config(fg="black")
+            entry.config(fg="black", font=normal_font)
 
-    def on_focus_out(event):   
-        if entry.get().strip() == "":
-            entry.insert(0, text)
-            entry.config(fg="#000")
+    def on_focus_out(event):
+        if not entry.get().strip():
+            show_placeholder()
 
     entry.bind("<FocusIn>", on_focus_in)
     entry.bind("<FocusOut>", on_focus_out)
 
+    # initial call
+    if not var.get():
+        show_placeholder()
 
-height = Entry(root, textvariable=Height, width=15, font='arial 15', bg="#fff", fg="#000", bd=0, justify=LEFT)
+
+
+height = Entry(root, textvariable=Height, width=11, font='arial 15', bg="#fff", fg="#000", bd=0, justify=LEFT)
 height.place(x=35, y=160)
 # Height.set(get_current_value())
 
-weight = Entry(root, textvariable=Weight, width=15, font='arial 15', bg="#fff", fg="#000", bd=0, justify=LEFT)
+weight = Entry(root, textvariable=Weight, width=11, font='arial 15', bg="#fff", fg="#000", bd=0, justify=LEFT)
 weight.place(x=255, y=160)
 # Weight.set(get_current_value2())
 
