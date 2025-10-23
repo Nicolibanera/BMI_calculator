@@ -149,6 +149,12 @@ def resetButton():
     secondimage.image = photo2
 
 
+
+
+
+
+
+
 #Slider1#
 current_value = tk.DoubleVar()
 
@@ -211,6 +217,25 @@ slider2.place(x=300, y=250)
 
 
 
+# this function is to update the man image so i can calll it anyuwhere.
+def updateManImage():
+    try:
+        current_height = float(Height.get()) if Height.get() and Height.get() not in ["Enter Height (cm)"] else 100
+        current_weight = float(Weight.get()) if Weight.get() and Weight.get() not in ["Enter Weight (kg)"] else 0
+
+        img = Image.open("icons/man.png")
+        new_width = 50 + int(current_weight // 2)
+        new_height = 10 + int(current_height)
+
+        resized_image = img.resize((new_width, new_height))
+        photo2 = ImageTk.PhotoImage(resized_image)
+        secondimage.config(image=photo2)
+        secondimage.place(x=70, y=550 - new_height)
+        secondimage.image = photo2
+    except Exception as e:
+        print("Image update error:", e)
+
+
 
 # Entry box linked with slider
 Height = StringVar()
@@ -226,6 +251,7 @@ def entryHeight(*args):
         val = float(txt)
         if 0 <= val <= 220:
             current_value.set(val)
+            updateManImage()
     except ValueError:
         pass
 
@@ -240,6 +266,8 @@ def entryWeight(*args):
         val = float(txt)
         if 0 <= val <= 200:
             current_value2.set(val)
+            updateManImage()
+            
     except ValueError:
         pass
 
